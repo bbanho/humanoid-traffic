@@ -58,7 +58,7 @@ O proxy MITM (`gateway_ca.py`) está operacional e capturando tráfego real.
 - [x] Extração de metadados: headers, body size, latency, status
 
 ### 2. Detecção de Provider (Concluído)
-- [x] Mapear hosts conhecidos: `api.anthropic.com`, `api.openai.com`, `generativelanguage.googleapis.com`, `api.deepseek.com`, `api.groq.com`, `api.x.ai`, `api.mistral.ai`, `api.perplexity.ai`, `api.cohere.ai`, `api.together.xyz`, `api.fireworks.ai`, `openrouter.ai`, `chat.openai.com`, `gemini.google.com`, `poe.com`
+- [x] Mapear hosts conhecidos: `api.anthropic.com`, `console.anthropic.com`, `api.openai.com`, `chat.openai.com`, `generativelanguage.googleapis.com`, `gemini.google.com`, `api.deepseek.com`, `api.groq.com`, `api.x.ai`, `api.mistral.ai`, `api.perplexity.ai`, `api.cohere.ai`, `api.together.xyz`, `api.fireworks.ai`, `openrouter.ai`, `api.antigravity.io`, `poe.com`
 - [x] Extrair token counts de responses (OpenAI, Anthropic, Gemini, OpenRouter formats)
 - [x] Classificar erro types: 429 (rate_limit), 403 (forbidden), 401 (unauthorized), 500, 502, 503
 - [x] Detectar streaming (SSE/NDJSON via content-type)
