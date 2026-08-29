@@ -146,10 +146,20 @@ JSONL logs → Parquet → spectral.py → SpectralSignature
   - will_violate threshold
 ```
 
-### Integração Imediata
-1. Script `jsonl_to_spectral.py` — lê logs, agrupa por sessão/provider, roda FFT
-2. Output: CSV com spectral features por janela temporal
-3. Alimentar `SpectralAnalyzer` do `humanoid-traffic/src/spectral.py`
+### Integração Imediata (CONCLUÍDA)
+1. **Script `jsonl_to_spectral.py`** — lê logs, agrupa por sessão/provider, roda FFT
+3. **Output:** JSON com spectral features por janela temporal
+4. **Alimenta** `SpectralAnalyzer` do `humanoid-traffic/src/spectral.py`
+
+### Testado
+```bash
+python scripts/jsonl_to_spectral.py --log-dir /var/home/bruno/repos/NEXUS/services/nexus-gateway/logs --output-dir ./spectral_output
+```
+**Resultado:** 1 sessão analisada (3 requests OpenAI), features extraídas:
+- spectral_entropy: 0.971
+- spectral_flatness: 0.800
+- spectral_slope: 0.891
+- human_score: 0.6 (threshold 0.6 → BOT com poucos pontos)
 
 ---
 
