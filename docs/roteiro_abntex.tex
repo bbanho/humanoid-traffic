@@ -1,19 +1,57 @@
-\documentclass[12pt,ruledheader,normaltoc,openright]{abnt2}
+\documentclass[12pt,openright,oneside,a4paper]{abntex2}
 
 \usepackage[utf8]{inputenc}
 \usepackage[T1]{fontenc}
 \usepackage[brazil]{babel}
 \usepackage{amsmath,amssymb}
 \usepackage{graphicx}
+\usepackage{indentfirst}
+\usepackage{microtype}
 
 \title{Roteiro para Obtenção de Parâmetros de Detecção de Automação em APIs de Inteligência Artificial: Uma Abordagem Espectral}
-\author{NEXUS Project}
-\date{2026}
+\autor{NEXUS Project}
+\local{Brasília}
+\data{2026}
+\instituicao{NEXUS Research}
+\tipotrabalho{Roteiro Metodológico}
+
+\makeatletter
+\hypersetup{
+    pdftitle={\@title},
+    pdfauthor={\@autor},
+    pdfsubject={\@tipotrabalho},
+    pdfkeywords={análise espectral, detecção de automação, APIs de IA, entropia espectral, séries temporais},
+    colorlinks=true,
+    linkcolor=blue,
+    citecolor=blue,
+    filecolor=magenta,
+    urlcolor=blue
+}
+\makeatother
 
 \begin{document}
 
-\capa
-\folhaderosto
+\imprimircapa
+\imprimirfolhaderosto*
+
+\begin{fichacatalografica}
+\vspace*{\fill}
+\begin{center}
+\fbox{
+\begin{minipage}[c]{12.5cm}
+\textbf{NEXUS Project}
+
+Roteiro para Obtenção de Parâmetros de Detecção de Automação em APIs de Inteligência Artificial: Uma Abordagem Espectral / NEXUS Project. --- Brasília, 2026.
+
+1 v.
+
+\textit{Roteiro Metodológico} --- NEXUS Research, 2026.
+
+1. Análise espectral. 2. Detecção de automação. 3. APIs de IA. 4. Entropia espectral. 5. Séries temporais. I. NEXUS Project.
+\end{minipage}
+}
+\end{center}
+\end{fichacatalografica}
 
 \begin{resumo}
 Este documento apresenta um roteiro metodológico para identificação experimental dos parâmetros utilizados por provedores de APIs de Inteligência Artificial na detecção de tráfego automatizado. Fundamentado na análise espectral de séries temporais, o método proposto permite caracterizar padrões de uso humano e diferenciá-los de padrões de automação, mediante transformada rápida de Fourier (FFT) e métricas de entropia espectral. O roteiro inclui procedimentos de captura de tráfego, extração de features, formulação de hipóteses e validação estatística, com vistas à construção de um modelo preditivo de classificação de intenção.
