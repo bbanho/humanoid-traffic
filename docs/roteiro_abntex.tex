@@ -1,11 +1,17 @@
-% Roteiro para Obtenção de Parâmetros de Detecção de Automação em APIs de Inteligência Artificial
-% Formato ABNT (NBR 14724:2011)
+\documentclass[12pt,a4paper]{article}
 
-\begin{document}
+\usepackage[utf8]{inputenc}
+\usepackage[T1]{fontenc}
+\usepackage[brazil]{babel}
+\usepackage{amsmath,amssymb}
+\usepackage{geometry}
+\geometry{top=3cm,left=3cm,right=2cm,bottom=2cm}
 
 \title{Roteiro para Obtenção de Parâmetros de Detecção de Automação em APIs de Inteligência Artificial: Uma Abordagem Espectral}
 \author{NEXUS Project}
 \date{2026}
+
+\begin{document}
 
 \maketitle
 
@@ -130,7 +136,7 @@ Ao final do roteiro, obter-se-á:
 \begin{enumerate}
     \item Conjunto de parâmetros $\{\alpha, H_n, SF, f_{dom}\}$ que caracterizam tráfego humano;
     \item Modelo preditivo de probabilidade de detecção: $P(ban | X) = \sigma(\beta^T X)$;
-    \item \textit{Thresholds} ótimos para operação segura: $\theta_{opt} = \arg\max_{\theta} (throughput \cdot P(não\ ban))$;
+    \item \textit{Thresholds} ótimos para operação segura;
     \item Estratégia de diluição temporal baseada em síntese de ruído 1/f.
 \end{enumerate}
 
