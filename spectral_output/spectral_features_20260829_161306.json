@@ -1,0 +1,22 @@
+[
+  {
+    "session_id": 1,
+    "num_requests": 3,
+    "duration_seconds": 122.726368,
+    "avg_interval": 61.363184,
+    "std_interval": 12.95534,
+    "cv_interval": 0.21112561564601995,
+    "total_tokens": 5,
+    "avg_tokens": 5.0,
+    "error_count": 2,
+    "error_rate": 0.6666666666666666,
+    "dominant_provider": "openai",
+    "spectral_entropy": 0.9710281336246123,
+    "spectral_flatness": 0.799874273886594,
+    "spectral_slope": 0.8907631373966273,
+    "dominant_freq": 0.5,
+    "dominant_magnitude": 25.91068,
+    "human_score": 0.6,
+    "status": "BOT"
+  }
+]
