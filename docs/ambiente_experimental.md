@@ -14,32 +14,36 @@ O proxy MITM (`gateway_ca.py`) está operacional e capturando tráfego real.
 | `gateway_ca.py` | ✓ Executando | Porta 8082 (8080 ocupada) |
 | Captura JSONL | ✓ Funcional | Log estruturado por request |
 | Pass-through TLS | ✓ Funcional | `curl -k --proxy` funcionou |
-| Detecção de provider | ✓ Parcial | "unknown" para httpbin.org |
+| Detecção de provider | ✓ Completa | 15+ providers mapeados |
+| Extração de tokens | ✓ Funcional | OpenAI, Anthropic, Gemini, OpenRouter |
+| Classificação de erro | ✓ Funcional | rate_limit, forbidden, unauthorized, server_error |
+| Detecção streaming | ✓ Funcional | SSE/NDJSON |
 
 ---
 
-## Log Gerado (Exemplo)
+## Log Gerado (Exemplo Atualizado)
 
 ```json
 {
-  "request_id": "f633d4d9-f756-4ee6-bc3f-5d75755633e0",
-  "timestamp_start": "2026-08-29T18:49:57.554473+00:00",
-  "timestamp_end": "2026-08-29T18:49:57.696205+00:00",
-  "duration_ms": 142.32,
+  "request_id": "ca63df21-947b-4ea4-ae7f-b5127ef38e7c",
+  "timestamp_start": "2026-08-29T18:58:30.382279+00:00",
+  "timestamp_end": "2026-08-29T18:58:30.556686+00:00",
+  "duration_ms": 175.16,
   "method": "GET",
-  "url": "https://httpbin.org/get",
-  "host": "httpbin.org",
-  "path": "/get",
-  "provider": "unknown",
-  "request_headers": {"user-agent": "curl/8.18.0", "accept": "*/*"},
+  "url": "https://api.openai.com/v1/models",
+  "host": "api.openai.com",
+  "path": "/v1/models",
+  "provider": "openai",
+  "request_headers": {"user-agent": "curl/8.18.0", "accept": "*/*", "authorization": "Bearer fake"},
   "request_body_size": 0,
-  "response_status": 200,
+  "request_token_count": null,
+  "response_status": 401,
   "response_headers": {...},
-  "response_body_size": 257,
-  "error_type": null,
-  "token_count_request": null,
-  "token_count_response": null,
-  "token_count_total": null
+  "response_body_size": 233,
+  "response_token_count": null,
+  "response_total_tokens": null,
+  "error_type": "unauthorized",
+  "is_streaming": false
 }
 ```
 
@@ -53,10 +57,12 @@ O proxy MITM (`gateway_ca.py`) está operacional e capturando tráfego real.
 - [x] Pass-through TLS sem modificação
 - [x] Extração de metadados: headers, body size, latency, status
 
-### 2. Detecção de Provider (Pendente)
-- [ ] Mapear hosts conhecidos: `api.anthropic.com`, `api.openai.com`, `generativelanguage.googleapis.com`, etc.
-- [ ] Extrair token counts de responses (OpenAI, Anthropic, Gemini formats)
-- [ ] Classificar erro types: 429, 403, 500, 502, 503
+### 2. Detecção de Provider (Concluído)
+- [x] Mapear hosts conhecidos: `api.anthropic.com`, `api.openai.com`, `generativelanguage.googleapis.com`, `api.deepseek.com`, `api.groq.com`, `api.x.ai`, `api.mistral.ai`, `api.perplexity.ai`, `api.cohere.ai`, `api.together.xyz`, `api.fireworks.ai`, `openrouter.ai`, `chat.openai.com`, `gemini.google.com`, `poe.com`
+- [x] Extrair token counts de responses (OpenAI, Anthropic, Gemini, OpenRouter formats)
+- [x] Classificar erro types: 429 (rate_limit), 403 (forbidden), 401 (unauthorized), 500, 502, 503
+- [x] Detectar streaming (SSE/NDJSON via content-type)
+- [x] Extrair request_token_count via max_tokens
 
 ### 3. Coleta de Baseline (7 dias)
 - [ ] Executar clientes legítimos via proxy:
@@ -103,11 +109,15 @@ Esses componentes podem ser usados para:
 
 ## Próximos Passos
 
-1. **Corrigir detecção de provider** em `gateway_ca.py` (mapear hosts conhecidos)
-2. **Adicionar extração de tokens** para formats OpenAI/Anthropic/Gemini
-3. **Instalar CA no cliente** (evitar `curl -k`)
-4. **Executar coleta de 7 dias** com clientes reais
-5. **Integrar com `humanoid-traffic`** para análise espectral automática
+1. **Instalar CA no cliente** (evitar `curl -k`) — gerar certificado e adicionar ao trust store
+2. **Executar coleta de 7 dias** com clientes reais:
+   - `HTTPS_PROXY=http://localhost:8082 claude-code ...`
+   - `HTTPS_PROXY=http://localhost:8082 python -m openai ...`
+   - `HTTPS_PROXY=http://localhost:8082 gemini-cli ...`
+3. **Mínimo 10.000 requests por perfil** — segmentar por provedor, tipo de tarefa, horário
+4. **Integrar com `humanoid-traffic`** para análise espectral automática:
+   - JSONL → Parquet → `spectral.py` → assinaturas 1/f
+5. **Testar cert pinning** — clientes reais podem rejeitar MITM
 
 ---
 
