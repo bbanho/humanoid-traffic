@@ -1,11 +1,10 @@
-\documentclass[12pt,a4paper]{article}
+\documentclass[12pt,ruledheader,normaltoc,openright]{abnt2}
 
 \usepackage[utf8]{inputenc}
 \usepackage[T1]{fontenc}
 \usepackage[brazil]{babel}
 \usepackage{amsmath,amssymb}
-\usepackage{geometry}
-\geometry{top=3cm,left=3cm,right=2cm,bottom=2cm}
+\usepackage{graphicx}
 
 \title{Roteiro para Obtenção de Parâmetros de Detecção de Automação em APIs de Inteligência Artificial: Uma Abordagem Espectral}
 \author{NEXUS Project}
@@ -13,39 +12,45 @@
 
 \begin{document}
 
-\maketitle
+\capa
+\folhaderosto
 
-\begin{abstract}
+\begin{resumo}
 Este documento apresenta um roteiro metodológico para identificação experimental dos parâmetros utilizados por provedores de APIs de Inteligência Artificial na detecção de tráfego automatizado. Fundamentado na análise espectral de séries temporais, o método proposto permite caracterizar padrões de uso humano e diferenciá-los de padrões de automação, mediante transformada rápida de Fourier (FFT) e métricas de entropia espectral. O roteiro inclui procedimentos de captura de tráfego, extração de features, formulação de hipóteses e validação estatística, com vistas à construção de um modelo preditivo de classificação de intenção.
-\end{abstract}
 
 \textbf{Palavras-chave:} análise espectral, detecção de automação, APIs de IA, entropia espectral, séries temporais.
+\end{resumo}
 
-\section{Introdução}
+\sumario
+
+\chapter{Introdução}
 
 Provedores de APIs de Inteligência Artificial (IA) estabelecem limites de uso (\textit{rate limits}) e proíbem automação em seus Termos de Serviço (ToS). Contudo, a detecção de violações opera em espaço multidimensional de características (\textit{features}), cujos parâmetros não são divulgados. Este roteiro formaliza o procedimento para obtenção experimental desses parâmetros, utilizando análise de frequência sobre séries temporais de requisições.
 
-\section{Referencial Teórico}
+\chapter{Referencial Teórico}
 
-\subsection{Ruído 1/f (Pink Noise)}
+\section{Ruído 1/f (Pink Noise)}
+
 O comportamento humano em interações com sistemas computacionais segue distribuição de potência $P(f) \propto 1/f^{\alpha}$, onde $\alpha \approx 1$ (ruído rosa). Esta propriedade é observada em diversas atividades humanas, desde batimentos cardíacos até padrões de digitação (Voss \& Clarke, 1975).
 
-\subsection{Espectro de Fourier}
+\section{Espectro de Fourier}
+
 A Transformada Rápida de Fourier (FFT) decompõe uma série temporal $x(t)$ em componentes sinusoidais:
 $$X(f) = \int_{-\infty}^{\infty} x(t) \cdot e^{-i2\pi ft} dt$$
 
 Padrões periódicos (bots) produzem picos espectrais; padrões estocásticos (humanos) produzem espectro disperso.
 
-\subsection{Entropia Espectral}
+\section{Entropia Espectral}
+
 A entropia de Shannon aplicada ao espectro de magnitudes mede a uniformidade da distribuição de energia:
 $$H = -\sum_{k=1}^{N} p_k \cdot \log_2(p_k)$$
 onde $p_k = |X(k)|^2 / \sum |X(j)|^2$. Alta entropia indica espectro plano (humano); baixa entropia indica concentração de energia em frequências específicas (bot).
 
-\section{Metodologia}
+\chapter{Metodologia}
 
-\subsection{Fase 1: Captura de Tráfego}
+\section{Fase 1: Captura de Tráfego}
 
-\subsubsection{1.1 Configuração do Ambiente}
+\subsection{1.1 Configuração do Ambiente}
 \begin{enumerate}
     \item Instalar proxy MITM (mitmproxy) com CA customizado no cliente;
     \item Configurar variáveis de ambiente: \texttt{HTTPS\_PROXY=http://localhost:8080};
@@ -53,16 +58,17 @@ onde $p_k = |X(k)|^2 / \sum |X(j)|^2$. Alta entropia indica espectro plano (huma
     \item Registrar: timestamp, método HTTP, URL, headers, corpo, status de resposta, latência.
 \end{enumerate}
 
-\subsubsection{1.2 Amostragem}
+\subsection{1.2 Amostragem}
 \begin{itemize}
     \item Amostragem contínua durante horários de uso ativo;
     \item Mínimo de 10.000 requisições por perfil de usuário;
     \item Segmentação por: provedor, tipo de tarefa (chat, code generation, vision), horário.
 \end{itemize}
 
-\subsection{Fase 2: Extração de Features}
+\section{Fase 2: Extração de Features}
 
-\subsubsection{2.1 Features Temporais}
+\subsection{2.1 Features Temporais}
+
 A partir da série de timestamps $\{t_1, t_2, \ldots, t_n\}$, calcular:
 \begin{itemize}
     \item Intervalos: $\Delta t_i = t_{i+1} - t_i$
@@ -70,16 +76,16 @@ A partir da série de timestamps $\{t_1, t_2, \ldots, t_n\}$, calcular:
     \item Burstiness: $B = (\sigma - \mu) / (\sigma + \mu)$
 \end{itemize}
 
-\subsubsection{2.2 Features de Conteúdo}
+\subsection{2.2 Features de Conteúdo}
 \begin{itemize}
     \item Tokens por requisição: $T_i$ (request), $T_o$ (response)
     \item Razão: $R_T = T_o / T_i$
     \item Frequência de tool calls: $F_{tool} = N_{tools} / N_{reqs}$
 \end{itemize}
 
-\subsection{Fase 3: Análise Espectral}
+\section{Fase 3: Análise Espectral}
 
-\subsubsection{3.1 Transformada de Fourier}
+\subsection{3.1 Transformada de Fourier}
 \begin{enumerate}
     \item Construir sinal $x(t) = \{\Delta t_1, \Delta t_2, \ldots, \Delta t_n\}$;
     \item Remover tendência: $x'(t) = x(t) - \bar{x}$;
@@ -88,7 +94,7 @@ A partir da série de timestamps $\{t_1, t_2, \ldots, t_n\}$, calcular:
     \item Obter magnitudes: $|X(k)|$ e frequências $f_k = k \cdot f_s / N$.
 \end{enumerate}
 
-\subsubsection{3.2 Métricas Espectrais}
+\subsection{3.2 Métricas Espectrais}
 \begin{itemize}
     \item Frequência dominante: $f_{dom} = \arg\max_k |X(k)|$ (excluindo DC);
     \item Entropia espectral normalizada: $H_n = H / \log_2(N)$;
@@ -96,7 +102,7 @@ A partir da série de timestamps $\{t_1, t_2, \ldots, t_n\}$, calcular:
     \item Inclinação espectral: ajuste linear de $\log|X(f)|$ vs $\log f$, obtendo $\alpha$ em $1/f^{\alpha}$.
 \end{itemize}
 
-\subsection{Fase 4: Formulação de Hipóteses}
+\section{Fase 4: Formulação de Hipóteses}
 
 Com base na literatura e observações preliminares, formular:
 
@@ -108,28 +114,29 @@ Com base na literatura e observações preliminares, formular:
     \item[H5] \textbf{Humanoid Timing}: Intervalos com distribuição log-normal ($\mu = 3.4$, $\sigma = 0.5$) não são filtrados.
 \end{itemize}
 
-\subsection{Fase 5: Validação}
+\section{Fase 5: Validação}
 
-\subsubsection{5.1 A/B Testing}
+\subsection{5.1 A/B Testing}
 \begin{itemize}
     \item Utilizar $N$ chaves idênticas, cada uma com padrão de uso diferente;
     \item Medir \textit{lifetime} até ban: $L_i$ para cada chave $i$;
     \item Correlacionar $L_i$ com métricas espectrais via regressão linear múltipla.
 \end{itemize}
 
-\subsubsection{5.2 Análise de Sobrevivência}
+\subsection{5.2 Análise de Sobrevivência}
+
 Modelar tempo até ban usando distribuição Weibull:
 $$h(t) = \frac{k}{\lambda} \left(\frac{t}{\lambda}\right)^{k-1}$$
 onde $k$ (forma) e $\lambda$ (escala) são estimados por máxima verossimilhança.
 
-\subsubsection{5.3 Significância Estatística}
+\subsection{5.3 Significância Estatística}
 \begin{itemize}
     \item Teste de Mann-Whitney para comparação de distribuições (humano vs bot);
     \item $p$-value $< 0.05$ para rejeição de hipóteses nulas;
     \item Intervalo de confiança de 95\% para parâmetros estimados.
 \end{itemize}
 
-\section{Resultados Esperados}
+\chapter{Resultados Esperados}
 
 Ao final do roteiro, obter-se-á:
 
@@ -140,7 +147,7 @@ Ao final do roteiro, obter-se-á:
     \item Estratégia de diluição temporal baseada em síntese de ruído 1/f.
 \end{enumerate}
 
-\section{Considerações Éticas}
+\chapter{Considerações Éticas}
 
 Este roteiro destina-se exclusivamente a:
 \begin{itemize}
@@ -156,14 +163,6 @@ Não se destina a:
     \item Violação de Termos de Serviço de terceiros.
 \end{itemize}
 
-\section{Referências}
-
-VOSS, R. F.; CLARKE, J. 1/f noise in music: music from 1/f noise. \textbf{The Journal of the Acoustical Society of America}, New York, v. 63, n. 1, p. 258-263, Jan. 1978.
-
-SHANNON, C. E. A mathematical theory of communication. \textbf{Bell System Technical Journal}, New York, v. 27, n. 3, p. 379-423, July 1948.
-
-MANN, H. B.; WHITNEY, D. R. On a test of whether one of two random variables is stochastically larger than the other. \textbf{The Annals of Mathematical Statistics}, v. 18, n. 1, p. 50-60, Mar. 1947.
-
-ASSOCIAÇÃO BRASILEIRA DE NORMAS TÉCNICAS. \textbf{NBR 14724: Informação e documentação — Trabalhos acadêmicos — Apresentação}. Rio de Janeiro: ABNT, 2011.
+\bibliography{referencias}
 
 \end{document}
